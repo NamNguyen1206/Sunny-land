@@ -122,6 +122,13 @@ public class Player : MonoBehaviour
             other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collected");
             Destroy(other.gameObject, 1f);
         }
+        if(other.gameObject.tag == "Hearth")
+        {
+            Debug.Log(other.transform.name);
+            currentHealth += 10;
+            other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collected");
+            Destroy(other.gameObject, 1f);
+        }
     }
     void RestartGame()
     {
