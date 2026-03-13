@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class Enemy : MonoBehaviour
     public Transform attackPoint;
     public float attackRadius = 1f;
     public LayerMask AttackLayer;
+    bool isDead = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -38,6 +40,7 @@ public class Enemy : MonoBehaviour
         if(maxHealth <= 0)
         {
             Die();
+            return;
         }
         if(Vector2.Distance(transform.position, player.position) <= attackRange)
         {
@@ -105,6 +108,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         maxHealth -= damage;
+        animator.SetTrigger("Hurt");
         if (maxHealth <= 0)
         {
             Die();
@@ -127,7 +131,13 @@ public class Enemy : MonoBehaviour
     }
     void Die()
     {
-        Destroy(this.gameObject);
+        animator.SetBool("Death", true);
+        StartCoroutine(DestroyAfterDeath());
+    }
+    IEnumerator DestroyAfterDeath()
+    {
+        yield return new WaitForSeconds(1.2f);
+        Destroy(gameObject);
     }
     public void Reset()
     {

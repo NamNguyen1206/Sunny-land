@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - Coin
   - Hearth
+  - VictoryPoint
+  - Trap
   layers:
   - Default
   - TransparentFX

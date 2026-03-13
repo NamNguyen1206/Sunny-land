@@ -129,6 +129,10 @@ public class Player : MonoBehaviour
             other.gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Collected");
             Destroy(other.gameObject, 1f);
         }
+        if(other.gameObject.tag == "VictoryPoint")
+        {
+            FindObjectOfType<SceneManagement>().LoadLevel();
+        }
     }
     void RestartGame()
     {
