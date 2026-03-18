@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Sunny-land.slnx"
+    "dotnet.defaultSolution": "Sunny land.slnx"
 }
