@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int currentCoins = 0;
     public int maxHealth = 100;
     private int currentHealth;
-    public Text healthText;
+    public Slider healthSlider;
     public Rigidbody2D rb;
     public Animator animator;
     public float JumpHeight = 5f;
@@ -24,20 +24,39 @@ public class Player : MonoBehaviour
     public LayerMask attackLayers;
 
     private bool facingRight = true;
+
     void Start()
     {
         currentHealth = maxHealth;
-        animator.SetBool("isGrounded", isGrounded);
+        RefreshUI();
+
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = currentHealth;
+        }
+        else
+        {
+            Debug.LogWarning("Player is missing a Health Slider reference.", this);
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("isGrounded", isGrounded);
+        }
+        else
+        {
+            Debug.LogWarning("Player is missing an Animator reference.", this);
+        }
     }
+
     void Update()
     {
         if(currentHealth <= 0)
         {
             Die();
         }
-        coinText.text = currentCoins.ToString();
-
-        healthText.text = currentHealth.ToString();
+        RefreshUI();
         
         movement = Input.GetAxis("Horizontal");
 
@@ -57,11 +76,17 @@ public class Player : MonoBehaviour
             Jump();
             isGrounded = false;
         }
-        animator.SetFloat("Speed", Mathf.Abs(movement));
-        animator.SetBool("isGrounded", isGrounded);
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", Mathf.Abs(movement));
+            animator.SetBool("isGrounded", isGrounded);
+        }
     if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Attack");
+            if (animator != null)
+            {
+                animator.SetTrigger("Attack");
+            }
         }
     }
     private void FixedUpdate()
@@ -70,7 +95,14 @@ public class Player : MonoBehaviour
         }
     void Jump()
         {
-            rb.AddForce(new Vector3(0f, JumpHeight, 0f), ForceMode2D.Impulse);
+            if (rb != null)
+            {
+                rb.AddForce(new Vector3(0f, JumpHeight, 0f), ForceMode2D.Impulse);
+            }
+            else
+            {
+                Debug.LogWarning("Player is missing a Rigidbody2D reference.", this);
+            }
         }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -88,6 +120,12 @@ public class Player : MonoBehaviour
     }
     public void Attack()
     {
+        if (attackPoint == null)
+        {
+            Debug.LogWarning("Player is missing an Attack Point reference.", this);
+            return;
+        }
+
         // Implement attack logic here (e.g., detect enemies in range, apply damage, etc.)
         Collider2D collInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, attackLayers); // Example: Detect enemies within a radius of 1 unit
         if (collInfo)
@@ -108,6 +146,7 @@ public class Player : MonoBehaviour
     {
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        RefreshUI();
         if (currentHealth == 0)
         {
             Die();
@@ -144,19 +183,42 @@ public class Player : MonoBehaviour
         // Implement death logic here (e.g., play animation, disable player controls, etc.)
         Debug.Log("Player has died.");
         //FindObjectOfType<GameManager>().isGameActive = false;
-        GameObject tempExplosion = Instantiate(explosionEffect, explosionSpawnPoint.position, Quaternion.identity);
-        Destroy(tempExplosion, 0.5f);
+        if (explosionEffect != null && explosionSpawnPoint != null)
+        {
+            GameObject tempExplosion = Instantiate(explosionEffect, explosionSpawnPoint.position, Quaternion.identity);
+            Destroy(tempExplosion, 0.5f);
+        }
         
         //Instantiate(player, spawnPosistion.position, Quaternion.identity);
         currentHealth = maxHealth;
-        transform.position = spawnPosistion.position;
+        if (spawnPosistion != null)
+        {
+            transform.position = spawnPosistion.position;
+        }
         
         // Reset all enemies when player dies
-        FindObjectOfType<GameManager>().ResetAllEnemies();
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        if (gameManager != null)
+        {
+            gameManager.ResetAllEnemies();
+        }
         
         //FindObjectOfType<GameManager>().isGameActive = true;
         //Destroy(this.gameObject);
         //Invoke("RestartGame", 1f);
+        }
+    }
+
+    void RefreshUI()
+    {
+        if (coinText != null)
+        {
+            coinText.text = currentCoins.ToString();
+        }
+
+        if (healthSlider != null)
+        {
+            healthSlider.value = currentHealth;
         }
     }
 }
