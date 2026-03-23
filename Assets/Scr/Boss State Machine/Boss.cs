@@ -6,6 +6,11 @@ public class Boss : MonoBehaviour
     public float moveSpeed = 2f;
     public float attackRange = 2f;
     public float chaseRange = 6f;
+    //public GameObject attackPoint;
+    public Transform attackCenter;
+    public float attackRadius = 1.5f;
+    public LayerMask playerLayer;
+    public int damage = 10;
 
     public int maxHealth = 100;
     public int currentHealth;
@@ -30,7 +35,6 @@ public class Boss : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
-
         stateMachine = new BossStateMachine();
 
         idleState = new IdleState(this);
@@ -53,6 +57,7 @@ public class Boss : MonoBehaviour
         if (currentHealth <= 0) return;
 
         currentHealth -= damage;
+        animator.Play("d_take_hit", -1, 0f);
 
         if (currentHealth <= 0)
         {
@@ -108,11 +113,32 @@ public class Boss : MonoBehaviour
         transform.localScale = new Vector3(-1, 1, 1);
     }
     void OnDrawGizmos()
-{
-    if (groundCheck != null)
     {
+        if (groundCheck != null)
+        {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * checkDistance);
+        }
+        if (attackCenter != null)
+        {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackCenter.position, attackRadius);
+        }
+    }
+
+    public void DealDamage()
+{
+    float distance = Vector2.Distance(attackCenter.position, player.position);
+
+    if (distance <= attackRadius)
+    {
+        Debug.Log("Player HIT inside circle");
+
+        Player p = player.GetComponent<Player>();
+        if (p != null)
+        {
+            p.TakeDamage(damage);
+        }
     }
 }
 }

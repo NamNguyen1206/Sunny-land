@@ -130,10 +130,17 @@ public class Player : MonoBehaviour
         Collider2D collInfo = Physics2D.OverlapCircle(attackPoint.position, attackRadius, attackLayers); // Example: Detect enemies within a radius of 1 unit
         if (collInfo)
         {
-            if(collInfo.gameObject.GetComponent<Enemy>() != null)
-            {
-                collInfo.gameObject.GetComponent<Enemy>().TakeDamage(10); // Example: Apply 10 damage to the enemy
-            }
+            //if(collInfo.gameObject.GetComponent<Enemy>() != null)
+            //{
+            //collInfo.gameObject.GetComponent<Enemy>().TakeDamage(10); // Example: Apply 10 damage to the enemy
+            //}
+            
+            // 1. Đánh Quái thường
+            Enemy e = collInfo.GetComponent<Enemy>();
+            if (e != null) e.TakeDamage(10);
+            // 2. Đánh Boss (Chỉ thêm dòng này)
+            Boss b = collInfo.GetComponent<Boss>();
+            if (b != null) b.TakeDamage(10);
         }
     }
     void OnDrawGizmosSelected()
