@@ -17,10 +17,12 @@ public class Boss : MonoBehaviour
 
     public Animator animator;
     public Rigidbody2D rb;
+    public GameObject chestPrefab;
     public Transform groundCheck;
     public float checkDistance = 0.2f;
     public LayerMask groundLayer;
     private bool movingRight = true;
+    public Vector2 desiredVelocity;
 
     [HideInInspector] public BossStateMachine stateMachine;
 
@@ -61,6 +63,7 @@ public class Boss : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            //SpawnChest();
             stateMachine.ChangeState(deathState);
         }
         else
@@ -68,12 +71,16 @@ public class Boss : MonoBehaviour
             stateMachine.ChangeState(takeHitState);
         }
     }
+    public void SpawnChest()
+    {
+        Instantiate(chestPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject); // optional: xoá boss
+    }
     public void Patrol()
     {
     // Di chuyển
     float direction = movingRight ? 1 : -1;
     rb.linearVelocity = new Vector2(direction * moveSpeed, rb.linearVelocity.y);
-
     // Check ground phía trước
     RaycastHit2D groundInfo = Physics2D.Raycast(groundCheck.position, Vector2.down, checkDistance, groundLayer);
 
@@ -127,7 +134,7 @@ public class Boss : MonoBehaviour
     }
 
     public void DealDamage()
-{
+    {
     float distance = Vector2.Distance(attackCenter.position, player.position);
 
     if (distance <= attackRadius)
@@ -140,5 +147,21 @@ public class Boss : MonoBehaviour
             p.TakeDamage(damage);
         }
     }
-}
+    }
+    public void OnParried()
+    {
+        Debug.Log("Boss bị phản đòn và khựng lại!");
+        
+        // Chuyển Boss sang trạng thái bị trúng đòn ngay lập tức
+        stateMachine.ChangeState(takeHitState);
+
+        // Hiệu ứng giật lùi (Knockback) cho Boss khi bị phản đòn
+        if (rb != null)
+        {
+            Vector2 pushDir = (transform.position - player.position).normalized;
+            rb.AddForce(pushDir * 5f, ForceMode2D.Impulse);
+        }
+        
+        // Bạn có thể phát âm thanh hoặc hiệu ứng lóe sáng tại đây
+    }
 }
