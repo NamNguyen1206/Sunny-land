@@ -22,7 +22,7 @@ public class Boss : MonoBehaviour
     public float checkDistance = 0.2f;
     public LayerMask groundLayer;
     private bool movingRight = true;
-    public Vector2 desiredVelocity;
+    //public Vector2 desiredVelocity;
 
     [HideInInspector] public BossStateMachine stateMachine;
 
