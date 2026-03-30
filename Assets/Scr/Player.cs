@@ -315,7 +315,7 @@ public class Player : MonoBehaviour
         }
         if (other.gameObject.tag == "VictoryPoint")
         {
-            SceneManagement.LoadLevel();
+            LevelManager.LoadLevel();
         }
     }
 

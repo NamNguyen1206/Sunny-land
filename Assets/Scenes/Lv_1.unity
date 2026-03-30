@@ -24966,6 +24966,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &263579435 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1753274102254391493, guid: cd26ef4621e53a8419bb44a3c994e14b, type: 3}
+  m_PrefabInstance: {fileID: 7221643046905408338}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &265848301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44297,7 +44302,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -45055,6 +45060,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983518471}
   m_CullTransparentMesh: 1
+--- !u!1 &997459471 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 957442502941724364, guid: cd26ef4621e53a8419bb44a3c994e14b, type: 3}
+  m_PrefabInstance: {fileID: 7221643046905408338}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1058514892 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6216678640741004826, guid: a6d2f8f234fe8ac42aa6cc5be21205e9, type: 3}
@@ -54406,6 +54416,14 @@ PrefabInstance:
       propertyPath: explosionSpawnPoint
       value: 
       objectReference: {fileID: 49020983}
+    - target: {fileID: 1532046224176616920, guid: 48cf72eb3a640d8479e661e0d861e689, type: 3}
+      propertyPath: m_Size.y
+      value: 2.5593324
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532046224176616920, guid: 48cf72eb3a640d8479e661e0d861e689, type: 3}
+      propertyPath: m_Offset.y
+      value: 1.416918
+      objectReference: {fileID: 0}
     - target: {fileID: 4321990032562989087, guid: 48cf72eb3a640d8479e661e0d861e689, type: 3}
       propertyPath: m_LocalPosition.x
       value: 154.69
@@ -54533,6 +54551,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 7062541260322647923, guid: 19d17471317bc9544b99b5828a890e24, type: 3}
+      propertyPath: page1
+      value: 
+      objectReference: {fileID: 263579435}
+    - target: {fileID: 7062541260322647923, guid: 19d17471317bc9544b99b5828a890e24, type: 3}
+      propertyPath: page2
+      value: 
+      objectReference: {fileID: 997459471}
+    - target: {fileID: 7062541260322647923, guid: 19d17471317bc9544b99b5828a890e24, type: 3}
       propertyPath: mainMenuUI
       value: 
       objectReference: {fileID: 1915082977}
@@ -54582,7 +54608,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9138229760269055726, guid: 19d17471317bc9544b99b5828a890e24, type: 3}
       propertyPath: m_Name
-      value: MenuMangager
+      value: MenuManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -55067,6 +55093,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5178180352497969363, guid: cd26ef4621e53a8419bb44a3c994e14b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1831924253}
+    - target: {fileID: 5924090466012796895, guid: cd26ef4621e53a8419bb44a3c994e14b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1831924253}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -55114,7 +55148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1446928762117310774, guid: f697e542bcbdf8248970f98dd6548e16, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitGame
+      value: QuitToMainMenu
       objectReference: {fileID: 0}
     - target: {fileID: 1446928762117310774, guid: f697e542bcbdf8248970f98dd6548e16, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
