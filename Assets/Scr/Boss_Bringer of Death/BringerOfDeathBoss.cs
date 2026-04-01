@@ -21,6 +21,7 @@ public class BringerOfDeathBoss : MonoBehaviour
     [Header("Spell Attack")]
     public int spellDamage = 10;
     public float spellRadius = 2f;
+    public float spellScaleFactor = 1f;
     public float spellMinSpawnDistance = 3f;
     public float spellMaxSpawnDistance = 6f;
     public float spellSpawnForwardOffset = 1.5f;
@@ -29,8 +30,11 @@ public class BringerOfDeathBoss : MonoBehaviour
     public float spellLifetime = 1.6f;
     public float spellCastDuration = 0.9f;
     public float spellSpawnDelay = 0.45f;
+    public float spellCooldown = 4f;
     public int spellSortingOrderOffset = 1;
     public GameObject spellAreaPrefab;
+
+    private float spellCooldownTimer = 0f;
 
     [Header("Health")]
     public int maxHealth = 100;
@@ -95,6 +99,11 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     void Update()
     {
+        if (spellCooldownTimer > 0)
+        {
+            spellCooldownTimer -= Time.deltaTime;
+        }
+        
         stateMachine.Update();
     }
 
@@ -301,7 +310,8 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     public void PlayCastAnimation()
     {
-        PlayAnimation(castAnimationName, true);
+        animator.SetTrigger("Cast");
+        //PlayAnimation(castAnimationName, true);
     }
 
     public void PlayHurtAnimation()
@@ -332,12 +342,23 @@ public class BringerOfDeathBoss : MonoBehaviour
             return;
         }
 
+        Debug.LogWarning("SpawnSpellAttack!");
         Vector3 spellSpawnPosition = GetSpellSpawnPosition();
         CreateSpellArea(spellSpawnPosition);
 
         // Vector3 spellSpawnPosition = GetSpellSpawnPosition();
         // Vector3 spellTargetPosition = GetSpellTargetPosition();
         // CreateSpellProjectile(spellSpawnPosition, spellTargetPosition);
+    }
+
+    public bool IsSpellAvailable()
+    {
+        return spellCooldownTimer <= 0f;
+    }
+
+    public void TriggerSpellCooldown()
+    {
+        spellCooldownTimer = spellCooldown;
     }
 
     void OnDrawGizmos()
@@ -587,6 +608,7 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     private void CreateSpellArea(Vector3 spellSpawnPosition)
     {
+        Debug.LogWarning("CreateSpellArea!");
         GameObject spellArea;
         bool spawnedFromPrefab = spellAreaPrefab != null;
 
@@ -621,8 +643,8 @@ public class BringerOfDeathBoss : MonoBehaviour
         bool shouldFaceRight = directionToPlayer > 0f;
         bool usePositiveScale = spriteFacesRightByDefault ? shouldFaceRight : !shouldFaceRight;
 
-        spellScale.x = usePositiveScale ? spellScaleX : -spellScaleX;
-        spellScale.y = spellScaleY;
+        spellScale.x = usePositiveScale ? (spellScaleX * spellScaleFactor) : -(spellScaleX * spellScaleFactor);
+        spellScale.y = spellScaleY * spellScaleFactor;
         spellScale.z = spellScaleZ;
         spellArea.transform.localScale = spellScale;
 
@@ -635,12 +657,13 @@ public class BringerOfDeathBoss : MonoBehaviour
         spellCollider.isTrigger = true;
 
         SpriteRenderer spellRenderer = spellArea.GetComponent<SpriteRenderer>();
-        bool addedRenderer = false;
+        var addedRenderer = false;
         if (spellRenderer == null)
         {
             spellRenderer = spellArea.AddComponent<SpriteRenderer>();
-            addedRenderer = true;
         }
+
+        addedRenderer = true;
 
         SpriteRenderer bossRenderer = GetComponent<SpriteRenderer>();
         if (bossRenderer != null && addedRenderer)
@@ -672,6 +695,7 @@ public class BringerOfDeathBoss : MonoBehaviour
             spellAreaComponent = spellArea.AddComponent<BringerOfDeathSpellArea>();
         }
 
+        Debug.LogWarning("CreateSpellArea 1");
         spellAreaComponent.Initialize(spellDamage, playerLayer, spellLifetime);
     }
 

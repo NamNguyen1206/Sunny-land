@@ -10,6 +10,8 @@ public class BringerOfDeathSpellArea : MonoBehaviour
 
     public void Initialize(int damage, LayerMask playerLayer, float lifetime)
     {
+        Debug.LogWarning("CreateSpellArea Initialize");
+
         this.damage = damage;
         this.playerLayer = playerLayer;
         hasDamagedPlayer = false;
@@ -22,6 +24,7 @@ public class BringerOfDeathSpellArea : MonoBehaviour
         }
 
         TryDamagePlayersAlreadyInside();
+        Debug.LogWarning("CreateSpellArea Initialize 2 lifetime: " + lifetime);
         Destroy(gameObject, lifetime);
     }
 

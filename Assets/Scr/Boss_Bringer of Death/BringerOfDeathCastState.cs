@@ -4,6 +4,7 @@ public class BringerOfDeathCastState : BringerOfDeathState
 {
     private float timer;
     private bool spellSpawned;
+    public BringerOfDeathBoss bringerOfDeathBoss;
 
     public BringerOfDeathCastState(BringerOfDeathBoss boss) : base(boss) { }
 
@@ -26,6 +27,8 @@ public class BringerOfDeathCastState : BringerOfDeathState
         {
             spellSpawned = true;
             boss.SpawnSpellAttack();
+            boss.TriggerSpellCooldown();
+            //boss.PlayCastAnimation();
         }
 
         if (timer >= boss.spellCastDuration)
@@ -44,4 +47,8 @@ public class BringerOfDeathCastState : BringerOfDeathState
             }
         }
     }
+    //public void OnSpellComplete()
+    //{
+       // bringerOfDeathBoss.SpawnSpellAttack();
+    //}
 }

@@ -39,7 +39,7 @@ public class BringerOfDeathChaseState : BringerOfDeathState
             return;
         }
 
-        if (distanceToPlayer <= boss.chaseRange)
+        if (distanceToPlayer <= boss.chaseRange && boss.IsSpellAvailable())
         {
             boss.stateMachine.ChangeState(boss.castState);
             return;

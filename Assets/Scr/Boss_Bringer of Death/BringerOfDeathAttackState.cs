@@ -24,7 +24,7 @@ public class BringerOfDeathAttackState : BringerOfDeathState
         {
             if (boss.DistanceToPlayer() > boss.attackRange)
             {
-                if (boss.DistanceToPlayer() <= boss.chaseRange)
+                if (boss.DistanceToPlayer() <= boss.chaseRange && boss.IsSpellAvailable())
                 {
                     boss.stateMachine.ChangeState(boss.castState);
                 }
