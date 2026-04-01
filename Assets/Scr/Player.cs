@@ -250,6 +250,9 @@ public class Player : MonoBehaviour
 
             Boss b = collInfo.GetComponent<Boss>();
             if (b != null) b.TakeDamage(10);
+
+            BringerOfDeathBoss bringerOfDeathBoss = collInfo.GetComponent<BringerOfDeathBoss>();
+            if (bringerOfDeathBoss != null) bringerOfDeathBoss.TakeDamage(10);
         }
     }
 
@@ -315,7 +318,7 @@ public class Player : MonoBehaviour
         }
         if (other.gameObject.tag == "VictoryPoint")
         {
-            LevelManager.LoadLevel();
+            LevelManager.LoadLevel(currentCoins);
         }
     }
 
