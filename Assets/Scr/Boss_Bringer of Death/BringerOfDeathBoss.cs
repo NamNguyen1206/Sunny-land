@@ -21,7 +21,6 @@ public class BringerOfDeathBoss : MonoBehaviour
     [Header("Spell Attack")]
     public int spellDamage = 10;
     public float spellRadius = 2f;
-    public float spellScaleFactor = 1f;
     public float spellMinSpawnDistance = 3f;
     public float spellMaxSpawnDistance = 6f;
     public float spellSpawnForwardOffset = 1.5f;
@@ -30,11 +29,9 @@ public class BringerOfDeathBoss : MonoBehaviour
     public float spellLifetime = 1.6f;
     public float spellCastDuration = 0.9f;
     public float spellSpawnDelay = 0.45f;
-    public float spellCooldown = 4f;
+    public float spellCooldown = 2.5f;
     public int spellSortingOrderOffset = 1;
     public GameObject spellAreaPrefab;
-
-    private float spellCooldownTimer = 0f;
 
     [Header("Health")]
     public int maxHealth = 100;
@@ -44,7 +41,6 @@ public class BringerOfDeathBoss : MonoBehaviour
     public Animator animator;
     public Rigidbody2D rb;
     public GameObject chestPrefab;
-    public Vector2 chestSpawnOffset = new Vector2(0f, -1.25f);
     public Transform groundCheck;
     public float checkDistance = 0.2f;
     public LayerMask groundLayer;
@@ -63,6 +59,7 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     private bool movingRight = true;
     private float desiredHorizontalSpeed;
+    private float nextSpellReadyTime;
 
     [HideInInspector] public BringerOfDeathStateMachine stateMachine;
 
@@ -99,11 +96,6 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     void Update()
     {
-        if (spellCooldownTimer > 0)
-        {
-            spellCooldownTimer -= Time.deltaTime;
-        }
-        
         stateMachine.Update();
     }
 
@@ -134,19 +126,15 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     public void SpawnChest()
     {
-        // SpawnChest cua Demon_Boss: tao chest tai transform.position roi huy boss.
         if (chestPrefab != null)
         {
-            Vector3 chestSpawnPosition = transform.position + (Vector3)chestSpawnOffset;
-            // Instantiate(chestPrefab, transform.position, Quaternion.identity);
-            Instantiate(chestPrefab, chestSpawnPosition, Quaternion.identity);
-            // Cach cu: dat chest xuong dung chan boss.
-            // GameObject spawnedChest = Instantiate(chestPrefab, transform.position, Quaternion.identity);
-            // spawnedChest.transform.position = GetChestSpawnPosition(spawnedChest);
-            Destroy(gameObject); // optional: xoá boss
+            Instantiate(chestPrefab, transform.position, Quaternion.identity);
+            Destroy(gameObject); // xoá boss
+            //GameObject spawnedChest = Instantiate(chestPrefab, transform.position, Quaternion.identity);
+            //spawnedChest.transform.position = GetChestSpawnPosition(spawnedChest);
         }
 
-        Destroy(gameObject); // optional: xoa boss
+        Destroy(gameObject);
     }
 
     public void Patrol()
@@ -310,8 +298,7 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     public void PlayCastAnimation()
     {
-        animator.SetTrigger("Cast");
-        //PlayAnimation(castAnimationName, true);
+        PlayAnimation(castAnimationName, true);
     }
 
     public void PlayHurtAnimation()
@@ -342,7 +329,6 @@ public class BringerOfDeathBoss : MonoBehaviour
             return;
         }
 
-        Debug.LogWarning("SpawnSpellAttack!");
         Vector3 spellSpawnPosition = GetSpellSpawnPosition();
         CreateSpellArea(spellSpawnPosition);
 
@@ -353,12 +339,23 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     public bool IsSpellAvailable()
     {
-        return spellCooldownTimer <= 0f;
+        if (spellCooldown <= 0f)
+        {
+            return true;
+        }
+
+        return Time.time >= nextSpellReadyTime;
     }
 
     public void TriggerSpellCooldown()
     {
-        spellCooldownTimer = spellCooldown;
+        if (spellCooldown <= 0f)
+        {
+            nextSpellReadyTime = 0f;
+            return;
+        }
+
+        nextSpellReadyTime = Time.time + spellCooldown;
     }
 
     void OnDrawGizmos()
@@ -608,7 +605,6 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     private void CreateSpellArea(Vector3 spellSpawnPosition)
     {
-        Debug.LogWarning("CreateSpellArea!");
         GameObject spellArea;
         bool spawnedFromPrefab = spellAreaPrefab != null;
 
@@ -643,8 +639,8 @@ public class BringerOfDeathBoss : MonoBehaviour
         bool shouldFaceRight = directionToPlayer > 0f;
         bool usePositiveScale = spriteFacesRightByDefault ? shouldFaceRight : !shouldFaceRight;
 
-        spellScale.x = usePositiveScale ? (spellScaleX * spellScaleFactor) : -(spellScaleX * spellScaleFactor);
-        spellScale.y = spellScaleY * spellScaleFactor;
+        spellScale.x = usePositiveScale ? spellScaleX : -spellScaleX;
+        spellScale.y = spellScaleY;
         spellScale.z = spellScaleZ;
         spellArea.transform.localScale = spellScale;
 
@@ -657,13 +653,12 @@ public class BringerOfDeathBoss : MonoBehaviour
         spellCollider.isTrigger = true;
 
         SpriteRenderer spellRenderer = spellArea.GetComponent<SpriteRenderer>();
-        var addedRenderer = false;
+        bool addedRenderer = false;
         if (spellRenderer == null)
         {
             spellRenderer = spellArea.AddComponent<SpriteRenderer>();
+            addedRenderer = true;
         }
-
-        addedRenderer = true;
 
         SpriteRenderer bossRenderer = GetComponent<SpriteRenderer>();
         if (bossRenderer != null && addedRenderer)
@@ -695,7 +690,6 @@ public class BringerOfDeathBoss : MonoBehaviour
             spellAreaComponent = spellArea.AddComponent<BringerOfDeathSpellArea>();
         }
 
-        Debug.LogWarning("CreateSpellArea 1");
         spellAreaComponent.Initialize(spellDamage, playerLayer, spellLifetime);
     }
 

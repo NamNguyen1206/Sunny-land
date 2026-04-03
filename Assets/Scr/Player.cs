@@ -61,6 +61,17 @@ public class Player : MonoBehaviour
         {
             Debug.LogWarning("Player is missing an Animator reference.", this);
         }
+
+        GameManager gameManager = GameManager.instance;
+        if (gameManager == null)
+        {
+            gameManager = FindFirstObjectByType<GameManager>();
+        }
+
+        if (gameManager != null && gameManager.currentCheckpoint == null && spawnPosistion != null)
+        {
+            gameManager.SetCheckpoint(spawnPosistion);
+        }
     }
 
     void Update()
@@ -337,15 +348,33 @@ public class Player : MonoBehaviour
         }
 
         currentHealth = maxHealth;
-        if (spawnPosistion != null)
+        GameManager gameManager = GameManager.instance;
+        if (gameManager != null)
+        {
+            // if (spawnPosistion != null)
+            // {
+            //     transform.position = spawnPosistion.position;
+            // }
+
+            if (gameManager.currentCheckpoint != null)
+            {
+                transform.position = gameManager.currentCheckpoint.position;
+            }
+            else if (spawnPosistion != null)
+            {
+                transform.position = spawnPosistion.position;
+            }
+
+            gameManager.ResetAllEnemies();
+        }
+        else if (spawnPosistion != null)
         {
             transform.position = spawnPosistion.position;
         }
 
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        if (gameManager != null)
+        if (rb != null)
         {
-            gameManager.ResetAllEnemies();
+            rb.linearVelocity = Vector2.zero;
         }
     }
 
