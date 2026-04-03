@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 1503721277145624170}
   - component: {fileID: 7474795264267058189}
   - component: {fileID: 3646436470716261544}
+  - component: {fileID: 18040851632498582}
   m_Layer: 8
   m_Name: Skeleton
   m_TagString: Untagged
@@ -116,7 +117,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5818877937026341535, guid: b47cdc47594f83b4a98c5f2d842223f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -162,7 +163,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6685807720544517818}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -215,21 +216,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   maxHealth: 50
   moveSpeed: 2
-  checkPoint: {fileID: 3752230783609376799}
-  distance: 0.65
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 64
+  chaseSpeed: 3
   player: {fileID: 0}
   attackRange: 5
   retreatRange: 2.5
-  cheseSpeed: 4
-  animator: {fileID: 3646436470716261544}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  checkPoint: {fileID: 3752230783609376799}
+  distance: 0.65
   attackPoint: {fileID: 8059610849170820109}
   attackRadius: 1.33
   AttackLayer:
     serializedVersion: 2
     m_Bits: 128
+  damage: 10
+  animator: {fileID: 3646436470716261544}
 --- !u!95 &3646436470716261544
 Animator:
   serializedVersion: 7
@@ -252,6 +254,43 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &18040851632498582
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6685807720544517818}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.43182087, y: 0}
+  m_Size: {x: 0.9093571, y: 2.8125}
+  m_Direction: 0
 --- !u!1 &7567293541788228438
 GameObject:
   m_ObjectHideFlags: 0

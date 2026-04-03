@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
     private bool facingRight = true;
     private float lastClickTime;
     public float comboDelay = 0.5f; // Thời gian tối đa giữa 2 lần bấm để tính combo
+    private bool isDying = false;
 
     // --- PARRY SYSTEM [NEW] ---
     [Header("Parry Settings")]
@@ -76,8 +77,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !isDying)
         {
+            isDying = true;
             Die();
         }
         RefreshUI();
@@ -341,21 +343,24 @@ public class Player : MonoBehaviour
     void Die()
     {
         Debug.Log("Player has died.");
-        if (explosionEffect != null && explosionSpawnPoint != null)
+        
+        if (animator != null)
         {
-            GameObject tempExplosion = Instantiate(explosionEffect, explosionSpawnPoint.position, Quaternion.identity);
-            Destroy(tempExplosion, 0.5f);
+            animator.SetTrigger("Death");
         }
+
+        StartCoroutine(DieRoutine());
+    }
+
+    // --- DIE COROUTINE ---
+    IEnumerator DieRoutine()
+    {
+        yield return new WaitForSeconds(0.5f);  // Đợi animation chạy xong
 
         currentHealth = maxHealth;
         GameManager gameManager = GameManager.instance;
         if (gameManager != null)
         {
-            // if (spawnPosistion != null)
-            // {
-            //     transform.position = spawnPosistion.position;
-            // }
-
             if (gameManager.currentCheckpoint != null)
             {
                 transform.position = gameManager.currentCheckpoint.position;
@@ -376,6 +381,13 @@ public class Player : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
         }
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Idle");
+        }
+
+        isDying = false;
     }
 
     void RefreshUI()
