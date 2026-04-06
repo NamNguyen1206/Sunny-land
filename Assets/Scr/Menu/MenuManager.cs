@@ -10,6 +10,8 @@ public class MenuManager : MonoBehaviour
     [Header("UI Panels")]
     public GameObject mainMenuUI;
     public GameObject aboutMenuUI;
+    public GameObject pauseMenuUI;
+    public GameObject levelMenuUI;
     public GameObject BackGroundUI;
     public GameObject TittleUI;
 
@@ -25,9 +27,18 @@ public class MenuManager : MonoBehaviour
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        
-        PlayButton.onClick.AddListener(PlayGame);
+
+        //PlayButton.onClick.AddListener(PlayGame);
+        //QuitButton.onClick.AddListener(QuitGame);
+        if (PlayButton != null)
+    {
+    PlayButton.onClick.AddListener(PlayGame);
+    }
+
+    if (QuitButton != null)
+    {
         QuitButton.onClick.AddListener(QuitGame);
+    }
         DontDestroyOnLoad(gameObject);
     }
 
@@ -35,8 +46,18 @@ public class MenuManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
-        PlayButton.onClick.RemoveListener(PlayGame);
+        //PlayButton.onClick.RemoveListener(PlayGame);
+        //QuitButton.onClick.RemoveListener(QuitGame);
+        if (PlayButton != null)
+    {
+    PlayButton.onClick.RemoveListener(PlayGame);
+    }
+
+    if (QuitButton != null)
+    {
         QuitButton.onClick.RemoveListener(QuitGame);
+    }
+        
     }
 
     void Update()
@@ -66,6 +87,7 @@ public class MenuManager : MonoBehaviour
             BackGroundUI.SetActive(false);
             mainMenuUI.SetActive(false);
             aboutMenuUI.SetActive(false);
+            pauseMenuUI.SetActive(false);
             TittleUI.SetActive(false);
         }
     }
@@ -73,13 +95,15 @@ public class MenuManager : MonoBehaviour
     public void PlayGame ()
     {
         BackGroundUI.SetActive(false);
+        TittleUI.SetActive(false);
         SceneManager.LoadScene("Lv_1");
     }
 
     private void ToggleMenu()
     {
         isMenuOpen = !isMenuOpen;
-        mainMenuUI.SetActive(isMenuOpen);
+        //mainMenuUI.SetActive(isMenuOpen);
+        pauseMenuUI.SetActive(isMenuOpen);
 
         // Khi mở menu → tắt about
         if (isMenuOpen)
@@ -134,6 +158,16 @@ public class MenuManager : MonoBehaviour
         isMenuOpen = false;
         mainMenuUI.SetActive(false);
         Time.timeScale = 1f;
+    }
+    public void LoadLevel(int levelIndex)
+    {
+        if (levelMenuUI != null)
+        {
+            levelMenuUI.SetActive(false);  // Tắt levelMenuUI
+            TittleUI.SetActive(false); // Tắt TittleUI nếu cần thiết
+        }
+        Time.timeScale = 1f; // Đảm bảo thời gian trở lại bình thường khi tải level mới
+        SceneManager.LoadScene(levelIndex);
     }
     public void QuitToMainMenu()
     {

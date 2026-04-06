@@ -42,6 +42,9 @@ public class BringerOfDeathBoss : MonoBehaviour
     public Rigidbody2D rb;
     public GameObject chestPrefab;
     public Transform groundCheck;
+
+    [Header("Chest")]
+    public float chestSpawnOffsetY = -1f;
     public float checkDistance = 0.2f;
     public LayerMask groundLayer;
 
@@ -128,7 +131,8 @@ public class BringerOfDeathBoss : MonoBehaviour
     {
         if (chestPrefab != null)
         {
-            Instantiate(chestPrefab, transform.position, Quaternion.identity);
+            Vector3 spawnPos = transform.position + new Vector3(0, chestSpawnOffsetY, 0);
+            Instantiate(chestPrefab, spawnPos, Quaternion.identity);
             Destroy(gameObject); // xoá boss
             //GameObject spawnedChest = Instantiate(chestPrefab, transform.position, Quaternion.identity);
             //spawnedChest.transform.position = GetChestSpawnPosition(spawnedChest);
